@@ -1,0 +1,46 @@
+{
+	"name": "User Management Tools",
+	"description": "Functionality for managing user accounts and project users.",
+	"namespace": "MCRI\\UserManagementTools",
+	"authors": [
+		{
+			"name": "Luke Stevens",
+			"email": "luke.stevens@mcri.edu.au",
+			"institution": "Murdoch Children's Research Institute"
+		}
+	],
+    "framework-version": 12,
+    "compatibility": {
+        "php-version-min": "8.0"
+    },
+	"system-settings": [
+        {
+            "key": "header1",
+            "name": "Settings",
+            "type": "descriptive"
+        },
+        {
+            "key": "restriction-option",
+            "name": "Restriction option? Block or warn?",
+            "required": true,
+            "type": "dropdown",
+            "choices": [
+                { "value": "restrictBlock", "name": "Block" },
+                { "value": "restrictWarn", "name": "Warn only" }
+            ]
+        },
+        {
+            "key": "display-message",
+            "name": "Override default message displayed to blocked / warned users (optional)",
+            "required": false,
+            "type": "textarea"
+        },
+        {
+            "key": "permit-as-project-admin",
+            "name": "Table-based usernames permitted admin-level access<br><span class=\"text-muted\">One username per line</span>",
+            "required": false,
+            "type": "textarea"
+        }
+    ],
+	"project-settings": [ ]
+}
