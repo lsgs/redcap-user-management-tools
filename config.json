@@ -10,9 +10,6 @@
 		}
 	],
     "framework-version": 12,
-    "compatibility": {
-        "php-version-min": "8.0"
-    },
 	"system-settings": [
         {
             "key": "header1",
