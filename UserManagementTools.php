@@ -38,7 +38,8 @@ class UserManagementTools extends AbstractExternalModule
 
         if (is_null($userRight)) {
             // any/all project pages - block/warn if non-Institutional user account with admin rights
-            if ($rights['user_rights']=='0' && $rights['data_access_groups']=='0') $permitted = true;
+            // read-only user rights access permitted
+            if (($rights['user_rights']=='0' || $rights['user_rights']=='2') && $rights['data_access_groups']=='0') $permitted = true;
 
             $overrideList = $this->getSystemSetting('permit-as-project-admin');
             if (preg_match("/\b$username\b/", $overrideList)) $permitted = true; // username is in permitted list
