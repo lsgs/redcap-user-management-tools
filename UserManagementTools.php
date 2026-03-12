@@ -19,9 +19,10 @@ class UserManagementTools extends AbstractExternalModule
     public function redcap_every_page_top($project_id) {
         if (empty($project_id)) return;
         if (!defined('USERID')) return;
+        if (USERID=='[survey_respondent]') return;
+        if (defined('NOAUTH') && NOAUTH) return;
         $this->user = $this->getUser();
         $this->username = $this->user->getUsername();
-        if ($this->username==="[survey_respondent]") return;
         if ($this->hasPagePermission()) return;
         $this->restrictPageAccess();
     }
