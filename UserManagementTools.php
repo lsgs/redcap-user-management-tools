@@ -134,7 +134,13 @@ class UserManagementTools extends AbstractExternalModule
      */
     public function redcap_user_rights($project_id) {
         $bad = array();
-        foreach ($this->getProject()->getUsers() as $user) {
+        $users = array();
+        try {
+            $users = $this->getProject()->getUsers();
+        } catch (\Throwable $th) {
+            //throw $th; // sometimes get "Exception: There is no user associated with the provided username."
+        }
+        foreach ($users as $user) {
             if (!$this->hasPagePermission($user->getUsername())) $bad[] = $user->getUsername();
         }
         if (count($bad) > 0) {
