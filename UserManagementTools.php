@@ -42,7 +42,7 @@ class UserManagementTools extends AbstractExternalModule
             // read-only user rights access permitted
             if (($rights['user_rights']=='0' || $rights['user_rights']=='2') && $rights['data_access_groups']=='0') $permitted = true;
 
-            $overrideList = $this->getSystemSetting('permit-as-project-admin');
+            $overrideList = $this->getSystemSetting('permit-as-project-admin') ?? '';
             if (preg_match("/\b$username\b/", $overrideList)) $permitted = true; // username is in permitted list
 
             $q = $this->query("select 1 from redcap_user_allowlist where username=? limit 1", [$username]);
@@ -106,7 +106,7 @@ class UserManagementTools extends AbstractExternalModule
             }
             $list .= "</ul>";
         } else {
-            $list = "Contact the REDCap administrator for assistance: ".\REDCap::filterHtml($GLOBALS['project_contact_email']);
+            $list = "Contact the owner of this project to have your permissions set appropriately.";
         }
         return $list;
     }
@@ -117,7 +117,15 @@ class UserManagementTools extends AbstractExternalModule
      */
     protected function getProjectAdmins() {
         $admins = array();
-        foreach ($this->getProject()->getUsers() as $user) {
+        $projectUsers = array();
+
+        try {
+            $this->getProject()->getUsers(); // throws exception when project has user that has not logged in
+        } catch (\Throwable $th) {
+            //throw $th; // "Exception: There is no user associated with the provided username." when project has users that have not logged in (no row in redcap_user_information)
+        }
+
+        foreach ($projectUsers as $user) {
             if (
                     $this->hasPagePermission($user->getUsername(), 'user_rights') &&
                     $this->hasPagePermission($user->getUsername())
@@ -138,7 +146,7 @@ class UserManagementTools extends AbstractExternalModule
         try {
             $users = $this->getProject()->getUsers();
         } catch (\Throwable $th) {
-            //throw $th; // sometimes get "Exception: There is no user associated with the provided username."
+            //throw $th; // "Exception: There is no user associated with the provided username." when project has users that have not logged in (no row in redcap_user_information)
         }
         foreach ($users as $user) {
             if (!$this->hasPagePermission($user->getUsername())) $bad[] = $user->getUsername();
